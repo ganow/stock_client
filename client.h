@@ -17,6 +17,23 @@
 #define TURNS 60
 #define TICKETS_MAX DEAL_MAX * TURNS
 
+#define HEX_DIGIT 10
+
+/* codes */
+#define TURN_START 0x000
+#define REQ_ACCEPT 0x001
+#define REQ_BUY 0x100
+#define REQ_SELL 0x101
+
+/* errors */
+#define UNKOWN_CODE 0x400
+#define INVALID_KEY 0x401
+#define TOO_MUCH_REQ 0x402
+#define ID_NOT_EXIST 0x403
+#define TOO_MUCH_BUY 0x404
+#define TOO_MUCH_SELL 0x405
+
+
 /* 基本データ型 */
 
 enum Deal { BUY, SELL };
@@ -43,7 +60,7 @@ struct Company {
 /* in comm.c */
 
 int get_stream(const char *host, const char *service);
-uint32_t Parse (const uint32_t* buf, struct Company* companies);
+uint32_t Parse (const char* buf, struct Company* companies);
 
 /* in tickets.c */
 
@@ -60,7 +77,7 @@ int isContain(struct Ticket* t, const struct Tickets* tickets);
 
 /* in companies.c */
 
-uint32_t InitCompanies(const uint32_t* buf, struct Company* companies);
+uint32_t InitCompanies(const char* buf, struct Company* companies);
 void PrintCompany(const struct Company* c);
 void PrintCompanies(const struct Company* companies);
 

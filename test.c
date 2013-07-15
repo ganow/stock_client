@@ -40,7 +40,8 @@ int main(int argc, char const *argv[])
     // PrintTickets(tickets);
 
     int fd; // ファイルディスクリプタ。サーバーとの接続
-    uint32_t buf[DATA_NUM];
+    char message[BUFSIZE];
+    char buf[DATA_NUM];
     // fd = get_stream("nepro.sfc.wide.ad.jp", "32768");
 
     const char *host = argv[1];
@@ -54,23 +55,25 @@ int main(int argc, char const *argv[])
         exit(-1);
     }
 
-    /* 送られてくるkeyの取得 */
+    /* 接続の確立 */
     int len = -1;
     while (len == -1) {
-      len = read(fd, buf, sizeof(buf));
+      len = read(fd, message, sizeof(message));
       printf("reading...\n");
     }
     printf("finish read\n");
     printf("len: %d\n", len);
 
-    struct Company companies[COMPANY_NUM];
-    uint32_t key;
+    printf("%s\n", message);
 
-    key = InitCompanies(buf, companies);
+    // struct Company companies[COMPANY_NUM];
+    // uint32_t key;
 
-    PrintCompanies(companies);
+    // key = InitCompanies(buf, companies);
 
-    printf("\n\nkey: %u\n", key);
+    // PrintCompanies(companies);
+
+    // printf("\n\nkey: %u\n", key);
 
     return 0;
 }
