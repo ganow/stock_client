@@ -15,3 +15,20 @@
 *.exe
 *.out
 *.app
+
+# for mac
+.DS_Store
+
+# binary
+client
+test
+
+# dump files
+out.txt
+
+# img
+*.jpg
+*.png
+
+*~
+
