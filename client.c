@@ -3,7 +3,8 @@
 int main(int argc, char const *argv[])
 {
     int fd; // ファイルディスクリプタ。サーバーとの接続
-    uint32_t buf[DATA_NUM];
+    char message[BUFSIZE];
+    char r_buf[BUFSIZE];
     // fd = get_stream("nepro.sfc.wide.ad.jp", "32768");
 
     const char *host = argv[1];
@@ -17,20 +18,36 @@ int main(int argc, char const *argv[])
         exit(-1);
     }
 
-    /* 送られてくるkeyの取得 */
+    /* 接続の確立 */
     int len = -1;
     while (len == -1) {
-      len = read(fd, buf, sizeof(buf));
+      len = read(fd, message, sizeof(message));
       printf("reading...\n");
     }
     printf("finish read\n");
     printf("len: %d\n", len);
 
-    for (int i = 0; i < 22; i++) {
-        printf("read num: %u\n", buf[i]);
-        int num = ntohl(buf[i]);
-        printf("num = %u\n", num);
+    printf("%s\n", message);
+
+    /* はじめに送られてくるリストでcompaniesを初期化 */
+    len = -1;
+    while (len == -1) {
+        len = read(fd, r_buf, sizeof(r_buf));
+        printf("waiting init list...\n");
     }
+
+    struct Company companies[COMPANY_NUM];
+    uint32_t key;
+
+    key = InitCompanies(r_buf, companies);
+
+    PrintCompanies(companies);
+
+    // for (int i = 0; i < 22; i++) {
+    //     printf("read num: %u\n", buf[i]);
+    //     int num = ntohl(buf[i]);
+    //     printf("num = %u\n", num);
+    // }
 
     // /* 送られてきたkeyに学籍番号を足して送信 */
     // num += 71146957;
