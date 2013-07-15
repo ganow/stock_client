@@ -31,10 +31,20 @@ int get_stream(const char *host, const char *service) {
     exit(-1);
 }
 
-uint32_t Parse (const uint32_t* buf, struct Company* companies) {
-    uint32_t key = ntohl(buf[0]);
-    for (int i = 0; i < COMPANY_NUM; i++) {
-        companies[i].stock_price = ntohl(buf[2+i*2]);
+uint32_t Parse (const char* buf, struct Company* companies) {
+    char tmp_buf[HEX_DIGIT];
+    uint32_t key;
+
+    for (int i = 0; i < HEX_DIGIT; i++) {
+        tmp_buf[i] = buf[i];
+    }
+    key = ntohl(strtol(tmp_buf, NULL, 16));
+
+    for (int k = 0; k < COMPANY_NUM; k++) {
+        for (int i = 0; i < HEX_DIGIT; i++) {
+            tmp_buf[i] = buf[HEX_DIGIT*2 + HEX_DIGIT*2*k + HEX_DIGIT + i];
+        }
+        companies[k].stock_price = ntohl(strtol(tmp_buf, NULL, 16));
     }
     return key;
 }
