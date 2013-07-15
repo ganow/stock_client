@@ -1,0 +1,48 @@
+reading...
+finish read
+len: 88
+##COMPANIES##
+
+##Company##
+id: 1446411936
+stock_price: 543846249
+hold_stocks: 0
+##Company##
+id: 32767
+stock_price: 1952998688
+hold_stocks: 0
+##Company##
+id: 1446411960
+stock_price: 554303545
+hold_stocks: 0
+##Company##
+id: 1
+stock_price: 14733069
+hold_stocks: 0
+##Company##
+id: 1766422336
+stock_price: 1745358460
+hold_stocks: 0
+##Company##
+id: 0
+stock_price: 50331648
+hold_stocks: 0
+##Company##
+id: 17
+stock_price: -267972996
+hold_stocks: 0
+##Company##
+id: 32767
+stock_price: 0
+hold_stocks: 0
+##Company##
+id: 0
+stock_price: 32968060
+hold_stocks: 0
+##Company##
+id: 0
+stock_price: -1606881199
+hold_stocks: 0
+
+
+key: 2037347616
