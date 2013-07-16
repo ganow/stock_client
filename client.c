@@ -54,18 +54,21 @@ int main(int argc, char const *argv[])
             Sell(10, key, 0, fd, companies, tickets);
         }
 
-        len = -1;
-        while (len == -1) {
-            len = read(fd, r_buf, sizeof(r_buf));
-            printf("waiting init list...\n");
-        }
+        int state = 0;
 
-        while (1) {
+        while (state == 0) {
+
+            len = -1;
+            while (len == -1) {
+                len = read(fd, r_buf, sizeof(r_buf));
+                printf("waiting init list...\n");
+            }
+
             uint32_t code;
             code = getCode(r_buf);
             if (code == TURN_START) {
                 key = Parse(r_buf, companies);
-                break;
+                state = 1;
             } else if (code == REQ_ACCEPT) {
                 //
             } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
