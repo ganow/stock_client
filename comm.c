@@ -15,7 +15,7 @@ int get_stream(const char *host, const char *service) {
     }
 
     for (ai = ai0; ai0; ai = ai->ai_next) {
-        fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        fd = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
         if (fd != -1) {
             error = connect(fd, ai->ai_addr, ai->ai_addrlen);
             if (error == 0) {
