@@ -20,19 +20,18 @@
 #define HEX_DIGIT 8
 
 /* codes */
-#define TURN_START 0x000
-#define REQ_ACCEPT 0x001
-#define REQ_BUY 0x100
-#define REQ_SELL 0x101
+#define TURN_START 0x00000000
+#define REQ_ACCEPT 0x00000001
+#define REQ_BUY 0x00000100
+#define REQ_SELL 0x00000101
 
 /* errors */
-#define UNKOWN_CODE 0x400
-#define INVALID_KEY 0x401
-#define TOO_MUCH_REQ 0x402
-#define ID_NOT_EXIST 0x403
-#define TOO_MUCH_BUY 0x404
-#define TOO_MUCH_SELL 0x405
-
+#define UNKOWN_CODE 0x00000400
+#define INVALID_KEY 0x00000401
+#define TOO_MUCH_REQ 0x00000402
+#define ID_NOT_EXIST 0x00000403
+#define TOO_MUCH_BUY 0x00000404
+#define TOO_MUCH_SELL 0x00000405
 
 /* 基本データ型 */
 

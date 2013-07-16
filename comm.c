@@ -55,6 +55,7 @@ uint32_t getCode (const char* buf) {
     for (int i = 0; i < HEX_DIGIT; i++) {
         tmp_buf[i] = buf[HEX_DIGIT + i];
     }
+    printf("%s\n", tmp_buf);
     code = ntohl(strtol(tmp_buf, NULL, 16));
     return code;
 }

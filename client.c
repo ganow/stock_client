@@ -66,15 +66,15 @@ int main(int argc, char const *argv[])
 
             uint32_t code;
             code = getCode(r_buf);
-            if (code == TURN_START) {
-                key = Parse(r_buf, companies);
-                state = 1;
-            } else if (code == REQ_ACCEPT) {
+            if (code == REQ_ACCEPT) {
                 //
             } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
                        code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
                        code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
                 printf("code error type: %x\n", code);
+            } else if (code == TURN_START) {
+                key = Parse(r_buf, companies);
+                state = 1;
             } else {
                 printf("something wrong in code\n");
             }
