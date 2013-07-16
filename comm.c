@@ -55,7 +55,28 @@ uint32_t getCode (const char* buf) {
     for (int i = 0; i < HEX_DIGIT; i++) {
         tmp_buf[i] = buf[HEX_DIGIT + i];
     }
-    printf("%s\n", tmp_buf);
     code = ntohl(strtol(tmp_buf, NULL, 16));
     return code;
+}
+
+uint32_t getKey (const char* buf) {
+    uint32_t code;
+    char tmp_buf[HEX_DIGIT];
+    for (int i = 0; i < HEX_DIGIT; i++) {
+        tmp_buf[i] = buf[i];
+    }
+    code = ntohl(strtol(tmp_buf, NULL, 16));
+    return code;
+}
+
+void dumpBuf (const char* buf) {
+    char tmp_buf[HEX_DIGIT];
+    printf("start to dump buf\n");
+
+    for (int i = 0; i < DATA_NUM; i++) {
+        for (int j = 0; j < HEX_DIGIT; j++) {
+            tmp_buf[j] = buf[i*HEX_DIGIT + j];
+        }
+        printf("%x\n", ntohl(strtol(tmp_buf, NULL, 16)));
+    }
 }

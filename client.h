@@ -24,6 +24,7 @@
 #define TICKETS_MAX DEAL_MAX * TURNS
 
 #define HEX_DIGIT 8
+#define INTSIZE 8
 
 /* codes */
 #define TURN_START 0x00000000
@@ -67,6 +68,8 @@ struct Company {
 int get_stream(const char *host, const char *service);
 uint32_t Parse (const char* buf, struct Company* companies);
 uint32_t getCode(const char* buf);
+uint32_t getKey(const char* buf);
+void dumpBuf(const char* buf);
 
 /* in tickets.c */
 

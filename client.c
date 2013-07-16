@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
 
     /* 接続の確立 */
     int len = -1;
-    while (len == -1) {
+    while (len <= 0) {
       len = read(fd, message, sizeof(message));
       printf("reading...\n");
     }
@@ -31,10 +31,13 @@ int main(int argc, char const *argv[])
 
     /* はじめに送られてくるリストでcompaniesを初期化 */
     len = -1;
-    while (len == -1) {
+    while (len < 0) {
         len = read(fd, r_buf, sizeof(r_buf));
         printf("waiting init list...\n");
     }
+    printf("finish read\n");
+    printf("len: %d\n", len);
+    dumpBuf(r_buf);
 
     struct Company companies[COMPANY_NUM];
     struct Tickets* tickets = InitTickets();
@@ -48,9 +51,9 @@ int main(int argc, char const *argv[])
 
         printf("%d th turn\n", t);
 
-        if (t % 2 == 0) {
+        if (t == 0) {
             Buy(10, key, 0, fd, companies, tickets);
-        } else {
+        } else if (t == 1) {
             Sell(10, key, 0, fd, companies, tickets);
         }
 
@@ -59,25 +62,33 @@ int main(int argc, char const *argv[])
         while (state == 0) {
 
             len = -1;
-            while (len == -1) {
+            while (len <= 0) {
                 len = read(fd, r_buf, sizeof(r_buf));
                 printf("waiting init list...\n");
             }
 
+            dumpBuf(r_buf);
+
             uint32_t code;
-            code = getCode(r_buf);
-            if (code == REQ_ACCEPT) {
-                //
-            } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
-                       code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
-                       code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
-                printf("code error type: %x\n", code);
-            } else if (code == TURN_START) {
-                key = Parse(r_buf, companies);
+            uint32_t tmp_key;
+            tmp_key = getKey(r_buf);
+            if (key != tmp_key) {
                 state = 1;
-            } else {
-                printf("something wrong in code\n");
+                printf("next turn\n");
             }
+            // code = getCode(r_buf);
+            // if (code == REQ_ACCEPT) {
+            //     //
+            // } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
+            //            code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
+            //            code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
+            //     printf("code error type: %x\n", code);
+            // } else if (code == TURN_START) {
+            //     key = Parse(r_buf, companies);
+            //     state = 1;
+            // } else {
+            //     printf("something wrong in code\n");
+            // }
         }
 
     }
