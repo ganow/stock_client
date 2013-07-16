@@ -3,8 +3,8 @@
 int main(int argc, char const *argv[])
 {
     int fd; // ファイルディスクリプタ。サーバーとの接続
-    char message[BUFSIZE];
-    char r_buf[BUFSIZE];
+    char message[26];
+    uint32_t r_buf[DATA_NUM];
     // fd = get_stream("nepro.sfc.wide.ad.jp", "32768");
 
     const char *host = argv[1];
@@ -20,21 +20,23 @@ int main(int argc, char const *argv[])
 
     /* 接続の確立 */
     int len = -1;
-    while (len <= 0) {
-      len = read(fd, message, sizeof(message));
-      printf("reading...\n");
-    }
-    printf("finish read\n");
-    printf("len: %d\n", len);
+    // while (len <= 0) {
+    //   len = read(fd, message, sizeof(message));
+    //   printf("reading...\n");
+    // }
+    // printf("finish read\n");
+    // printf("len: %d\n", len);
 
-    printf("%s\n", message);
+    // printf("%s\n", message);
 
     /* はじめに送られてくるリストでcompaniesを初期化 */
-    len = -1;
-    while (len < 0) {
-        len = read(fd, r_buf, sizeof(r_buf));
-        printf("waiting init list...\n");
-    }
+    // len = -1;
+    // while (len < 0) {
+    //     len = read(fd, r_buf, sizeof(r_buf));
+    //     printf("waiting init list...\n");
+    // }
+
+    len = getData(fd, r_buf);
     printf("finish read\n");
     printf("len: %d\n", len);
     dumpBuf(r_buf);
@@ -42,6 +44,7 @@ int main(int argc, char const *argv[])
     struct Company companies[COMPANY_NUM];
     struct Tickets* tickets = InitTickets();
     uint32_t key;
+    int money = 10000;
 
     key = InitCompanies(r_buf, companies);
 
@@ -50,22 +53,25 @@ int main(int argc, char const *argv[])
     for (int t = 0; t < TURNS; t++) {
 
         printf("%d th turn\n", t);
+        PrintCompanies(companies);
 
         if (t == 0) {
             Buy(10, key, 0, fd, companies, tickets);
         } else if (t == 1) {
             Sell(10, key, 0, fd, companies, tickets);
+        } else {
         }
 
         int state = 0;
 
         while (state == 0) {
 
-            len = -1;
-            while (len <= 0) {
-                len = read(fd, r_buf, sizeof(r_buf));
-                printf("waiting init list...\n");
-            }
+            // len = -1;
+            // while (len <= 0) {
+            //     len = read(fd, r_buf, sizeof(r_buf));
+            //     printf("waiting init list...\n");
+            // }
+            getData(fd, r_buf);
 
             dumpBuf(r_buf);
 
@@ -76,19 +82,22 @@ int main(int argc, char const *argv[])
                 state = 1;
                 printf("next turn\n");
             }
-            // code = getCode(r_buf);
-            // if (code == REQ_ACCEPT) {
-            //     //
-            // } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
-            //            code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
-            //            code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
-            //     printf("code error type: %x\n", code);
-            // } else if (code == TURN_START) {
-            //     key = Parse(r_buf, companies);
-            //     state = 1;
-            // } else {
-            //     printf("something wrong in code\n");
-            // }
+            code = getCode(r_buf);
+            if (code == REQ_ACCEPT) {
+                int accepted_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
+                if (accepted_idx != -1) {
+                    DeleteTicket(accepted_idx, tickets);
+                }
+            } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
+                       code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
+                       code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
+                printf("code error type: %x\n", code);
+            } else if (code == TURN_START) {
+                key = Parse(r_buf, companies);
+                state = 1;
+            } else {
+                printf("something wrong in code\n");
+            }
         }
 
     }
