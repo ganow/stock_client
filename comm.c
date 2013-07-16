@@ -6,7 +6,7 @@ int get_stream(const char *host, const char *service) {
 
     memset((void *)&hints, 0, sizeof(struct addrinfo));
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_family |= PF_UNSPEC;
+    hints.ai_family = AF_UNSPEC;
 
     error = -1;
     if (error == getaddrinfo(host, service, &hints, &ai0)) {
