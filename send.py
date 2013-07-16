@@ -2,7 +2,7 @@ import os, sys
 import multiprocessing
 
 def handle(ip, port):
-    os.system('./client '+ ip + port)
+    os.system('./client '+ ip + ' ' + port)
 
 if __name__ == '__main__':
 
