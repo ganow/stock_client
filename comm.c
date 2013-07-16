@@ -48,3 +48,13 @@ uint32_t Parse (const char* buf, struct Company* companies) {
     }
     return key;
 }
+
+uint32_t getCode (const char* buf) {
+    uint32_t code;
+    char tmp_buf[HEX_DIGIT];
+    for (int i = 0; i < HEX_DIGIT; i++) {
+        tmp_buf[i] = buf[HEX_DIGIT + i];
+    }
+    code = ntohl(strtol(tmp_buf, NULL, 16));
+    return code;
+}

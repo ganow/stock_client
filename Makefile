@@ -2,10 +2,10 @@ CC = $(HOME)/local/bin/gcc
 CFLAGS = -O3 -Wall -std=c99
 
 BINARY = client
-SOURCE = comm.c tickets.c companies.c client.c
+SOURCE = comm.c tickets.c companies.c trade.c client.c
 
 TEST = test
-TEST_SOURCE = comm.c tickets.c companies.c test.c
+TEST_SOURCE = comm.c tickets.c companies.c trade.c test.c
 
 all: $(BINARY) $(TEST)
 

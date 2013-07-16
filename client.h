@@ -17,7 +17,7 @@
 #define TURNS 60
 #define TICKETS_MAX DEAL_MAX * TURNS
 
-#define HEX_DIGIT 10
+#define HEX_DIGIT 8
 
 /* codes */
 #define TURN_START 0x000
@@ -61,6 +61,7 @@ struct Company {
 
 int get_stream(const char *host, const char *service);
 uint32_t Parse (const char* buf, struct Company* companies);
+uint32_t getCode(const char* buf);
 
 /* in tickets.c */
 
@@ -80,5 +81,12 @@ int isContain(struct Ticket* t, const struct Tickets* tickets);
 uint32_t InitCompanies(const char* buf, struct Company* companies);
 void PrintCompany(const struct Company* c);
 void PrintCompanies(const struct Company* companies);
+
+/* in trade.c */
+void Buy (const int stock_num, const int key, const int company_id, const int fd,
+          struct Company* companies, struct Tickets* tickets);
+
+void Sell (const int stock_num, const int key, const int company_id, const int fd,
+           struct Company* companies, struct Tickets* tickets);
 
 #endif

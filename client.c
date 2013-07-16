@@ -37,11 +37,47 @@ int main(int argc, char const *argv[])
     }
 
     struct Company companies[COMPANY_NUM];
+    struct Tickets* tickets = InitTickets();
     uint32_t key;
 
     key = InitCompanies(r_buf, companies);
 
     PrintCompanies(companies);
+
+    for (int t = 0; t < TURNS; t++) {
+
+        printf("%d th turn\n", t);
+
+        if (t % 2 == 0) {
+            Buy(10, key, 0, fd, companies, tickets);
+        } else {
+            Sell(10, key, 0, fd, companies, tickets);
+        }
+
+        len = -1;
+        while (len == -1) {
+            len = read(fd, r_buf, sizeof(r_buf));
+            printf("waiting init list...\n");
+        }
+
+        while (1) {
+            uint32_t code;
+            code = getCode(r_buf);
+            if (code == TURN_START) {
+                key = Parse(r_buf, companies);
+                break;
+            } else if (code == REQ_ACCEPT) {
+                //
+            } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
+                       code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
+                       code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
+                printf("code error type: %x\n", code);
+            } else {
+                printf("something wrong in code\n");
+            }
+        }
+
+    }
 
     close(fd);
 

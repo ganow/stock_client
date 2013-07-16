@@ -93,8 +93,3 @@ int isContain(struct Ticket* t, const struct Tickets* tickets) {
     PrintTicket(t);
     return -1;
 }
-
-// void Buy (const int id, const int stock_num, const struct Company* companies,
-//           struct Tickets* tickets) {
-//     /* data */
-// }
