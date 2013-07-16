@@ -31,52 +31,54 @@ int get_stream(const char *host, const char *service) {
     exit(-1);
 }
 
-uint32_t Parse (const char* buf, struct Company* companies) {
-    char tmp_buf[HEX_DIGIT];
+int getData(const int fd, uint32_t *buf) {
+
+    int len = -1;
+    int total_read = 0;
+
+    uint32_t tmp_buf[BUFSIZE];
+
+    while (total_read < DATA_NUM) {
+        while (len < 0) {
+            len = read(fd, tmp_buf, sizeof(tmp_buf));
+        }
+        for (int i = 0; i < len; i++) {
+            buf[total_read+i] = tmp_buf[i];
+        }
+        total_read += len;
+    }
+
+    return total_read;
+
+}
+
+uint32_t Parse (const uint32_t* buf, struct Company* companies) {
     uint32_t key;
 
-    for (int i = 0; i < HEX_DIGIT; i++) {
-        tmp_buf[i] = buf[i];
-    }
-    key = ntohl(strtol(tmp_buf, NULL, 16));
+    key = ntohl(buf[0]);
 
     for (int k = 0; k < COMPANY_NUM; k++) {
-        for (int i = 0; i < HEX_DIGIT; i++) {
-            tmp_buf[i] = buf[HEX_DIGIT*2 + HEX_DIGIT*2*k + HEX_DIGIT + i];
-        }
-        companies[k].stock_price = ntohl(strtol(tmp_buf, NULL, 16));
+        companies[k].stock_price = ntohl(buf[3+k*2]);
     }
     return key;
 }
 
-uint32_t getCode (const char* buf) {
+uint32_t getCode (const uint32_t* buf) {
     uint32_t code;
-    char tmp_buf[HEX_DIGIT];
-    for (int i = 0; i < HEX_DIGIT; i++) {
-        tmp_buf[i] = buf[HEX_DIGIT + i];
-    }
-    code = ntohl(strtol(tmp_buf, NULL, 16));
+    code = ntohl(buf[1]);
     return code;
 }
 
-uint32_t getKey (const char* buf) {
-    uint32_t code;
-    char tmp_buf[HEX_DIGIT];
-    for (int i = 0; i < HEX_DIGIT; i++) {
-        tmp_buf[i] = buf[i];
-    }
-    code = ntohl(strtol(tmp_buf, NULL, 16));
-    return code;
+uint32_t getKey (const uint32_t* buf) {
+    uint32_t key;
+    key = ntohl(buf[0]);
+    return key;
 }
 
-void dumpBuf (const char* buf) {
-    char tmp_buf[HEX_DIGIT];
+void dumpBuf (const uint32_t* buf) {
     printf("start to dump buf\n");
 
     for (int i = 0; i < DATA_NUM; i++) {
-        for (int j = 0; j < HEX_DIGIT; j++) {
-            tmp_buf[j] = buf[i*HEX_DIGIT + j];
-        }
-        printf("%x\n", ntohl(strtol(tmp_buf, NULL, 16)));
+        printf("%x\n", ntohl(buf[i]));
     }
 }

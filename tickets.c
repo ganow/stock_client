@@ -74,8 +74,7 @@ void DeleteTicket(const int idx, struct Tickets* tickets) {
 
 int isEqual (const struct Ticket* t1, const struct Ticket* t2) {
     if (t1->key == t2->key && t1->deal == t2->deal &&
-        t1->id == t2->id && t1->stock_price == t2->stock_price &&
-        t1->stock_num == t2->stock_num) {
+        t1->id == t2->id && t1->stock_num == t2->stock_num) {
         return 1;
     } else {
         return 0;
@@ -92,4 +91,24 @@ int isContain(struct Ticket* t, const struct Tickets* tickets) {
     printf("There aren't such kind of ticket\n");
     PrintTicket(t);
     return -1;
+}
+
+struct Ticket* MakeTicketFromBuf(const uint32_t *buf) {
+    uint32_t key;
+    int id, value;
+    enum Deal deal;
+
+    key = ntohl(getKey(buf));
+
+    if (getCode(buf) == REQ_BUY) {
+        deal = BUY;
+    } else if (getCode(buf) == REQ_SELL) {
+        deal = SELL;
+    }
+
+    id = ntohl(buf[2]);
+    id = ntohl(buf[3]);
+
+    return NewTicket(key, deal, id, 0, value);
+
 }

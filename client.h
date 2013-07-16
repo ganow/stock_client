@@ -23,9 +23,6 @@
 #define TURNS 60
 #define TICKETS_MAX DEAL_MAX * TURNS
 
-#define HEX_DIGIT 8
-#define INTSIZE 8
-
 /* codes */
 #define TURN_START 0x00000000
 #define REQ_ACCEPT 0x00000001
@@ -66,10 +63,11 @@ struct Company {
 /* in comm.c */
 
 int get_stream(const char *host, const char *service);
-uint32_t Parse (const char* buf, struct Company* companies);
-uint32_t getCode(const char* buf);
-uint32_t getKey(const char* buf);
-void dumpBuf(const char* buf);
+int getData(const int fd, uint32_t *buf);
+uint32_t Parse (const uint32_t* buf, struct Company* companies);
+uint32_t getCode(const uint32_t* buf);
+uint32_t getKey(const uint32_t* buf);
+void dumpBuf(const uint32_t* buf);
 
 /* in tickets.c */
 
@@ -84,9 +82,11 @@ void DeleteTicket(const int idx, struct Tickets* tickets);
 int isEqual (const struct Ticket* t1, const struct Ticket* t2);
 int isContain(struct Ticket* t, const struct Tickets* tickets);
 
+struct Ticket* MakeTicketFromBuf(const uint32_t* buf);
+
 /* in companies.c */
 
-uint32_t InitCompanies(const char* buf, struct Company* companies);
+uint32_t InitCompanies(const uint32_t* buf, struct Company* companies);
 void PrintCompany(const struct Company* c);
 void PrintCompanies(const struct Company* companies);
 
