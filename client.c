@@ -55,9 +55,9 @@ int main(int argc, char const *argv[])
         printf("%d th turn\n", t);
         PrintCompanies(companies);
 
-        if (t == 0) {
+        if (t % 2 == 0) {
             Buy(10, key, 0, fd, companies, tickets);
-        } else if (t == 1) {
+        } else if (t % 2 == 1) {
             Sell(10, key, 0, fd, companies, tickets);
         } else {
         }
