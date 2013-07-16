@@ -1,13 +1,19 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netdb.h>
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <unistd.h>
+#include <ctype.h>
+#include <time.h>
+#include <sys/select.h>
+#include <limits.h>
 
 #define BUFSIZE 1024
 
