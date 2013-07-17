@@ -98,6 +98,7 @@ int ApplyTicket(const int idx, struct Tickets* tickets, struct Company* companie
 uint32_t InitCompanies(const uint32_t* buf, struct Company* companies);
 void PrintCompany(const struct Company* c);
 void PrintCompanies(const struct Company* companies);
+void PrintPrices(const struct Company* companies);
 int getStockPrice(const int idx, const struct Company* companies);
 
 /* in trade.c */
@@ -106,5 +107,7 @@ void Buy (const int stock_num, const int key, const int company_id, const int fd
 
 void Sell (const int stock_num, const int key, const int company_id, const int fd,
            struct Company* companies, struct Tickets* tickets);
+
+/* in strategy.c */
 
 #endif

@@ -25,6 +25,13 @@ void PrintCompanies(const struct Company* companies) {
     }
 }
 
+void PrintPrices(const struct Company* companies) {
+    for (int i = 0; i < COMPANY_NUM; i++) {
+        printf("%d ", companies[i].stock_price);
+    }
+    printf("\n");
+}
+
 int getStockPrice (const int idx, const struct Company* companies) {
     return companies[idx].stock_price;
 }

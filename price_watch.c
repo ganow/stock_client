@@ -20,9 +20,6 @@ int main(int argc, char const *argv[])
     int len = -1;
 
     len = getData(fd, r_buf);
-    printf("finish read\n");
-    printf("len: %d\n", len);
-    // dumpBuf(r_buf);
 
     /* ゲームに必要なデータの初期化 */
     struct Company companies[COMPANY_NUM];
@@ -33,25 +30,12 @@ int main(int argc, char const *argv[])
 
     key = InitCompanies(r_buf, companies);
 
-    PrintCompanies(companies);
-
     /* メインルーチン。ターン数分実行される */
     for (int t = 0; t < TURNS; t++) {
 
-        printf("\n\n------------------------%d th turn  money: %d------------------------\n", t, money);
-        PrintCompanies(companies);
+        PrintPrices(companies);
 
         /* strategy部分 */
-
-        int comp = 2;
-
-        if (t % 2 == 0) {
-            Buy(money/getStockPrice(comp, companies), key, comp, fd, companies, tickets);
-        } else if (t % 2 == 1) {
-            Sell(companies[comp].hold_stocks, key, comp, fd, companies, tickets);
-        } else {
-        }
-
 
         /* ターン内で投げたリクエストに対する反応を取得する */
         state = 0;
@@ -70,21 +54,17 @@ int main(int argc, char const *argv[])
             tmp_key = getKey(r_buf);
             if (key != tmp_key) {
                 state = 1;
-                printf("next turn\n");
             }
             tmp_code = getCode(r_buf);
             if (tmp_code == REQ_ACCEPT) {
                 int accepted_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
                 if (accepted_idx != -1) {
                     money += ApplyTicket(accepted_idx, tickets, companies);
-                    printf("%d th ticket accepted!!\n", accepted_idx);
                 }
             } else if (tmp_code == UNKOWN_CODE || tmp_code == INVALID_KEY ||
                        tmp_code == TOO_MUCH_REQ || tmp_code == ID_NOT_EXIST ||
                        tmp_code == TOO_MUCH_BUY || tmp_code == TOO_MUCH_SELL) {
-                printf("code error type: %s\n", getCodeName(tmp_code));
                 int rejected_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
-                printf("rejected ticket: %d\n", rejected_idx);
                 if (rejected_idx != -1) {
                     DeleteTicket(rejected_idx, tickets);
                 }
@@ -94,7 +74,6 @@ int main(int argc, char const *argv[])
             } else if (tmp_code == GAME_END) {
                 state = 2;
             } else {
-                printf("something wrong in code\n");
             }
         }
 
