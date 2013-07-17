@@ -36,6 +36,12 @@ int main(int argc, char const *argv[])
         PrintPrices(companies);
 
         /* strategy部分 */
+        int comp = 2;
+        if (t % 2 == 0) {
+          Buy(money / getStockPrice(comp, companies), key, comp, fd, companies, tickets);
+        } else if (t % 2 == 1) {
+          Sell(companies[comp].hold_stocks, key, comp, fd, companies, tickets);
+        }
 
         /* ターン内で投げたリクエストに対する反応を取得する */
         state = 0;
