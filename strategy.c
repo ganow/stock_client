@@ -12,3 +12,13 @@
 さかのぼった時刻も加味した判断をすれば、さらに予測精度は向上する
 
 */
+
+void InitStrategy (const int fd, const int key,
+                   struct Tickets* tickets, struct Company* companies) {
+    int buy_list[5] = {1, 3, 4, 6, 8};
+    int each_budget = 10000 / 5;
+
+    for (int i = 0; i < 5; i++) {
+        Buy(each_budget / getStockPrice(buy_list[i], companies), key, buy_list[i], fd, companies, tickets);
+    }
+}

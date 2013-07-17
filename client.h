@@ -109,5 +109,7 @@ void Sell (const int stock_num, const int key, const int company_id, const int f
            struct Company* companies, struct Tickets* tickets);
 
 /* in strategy.c */
+void InitStrategy (const int fd, const int key,
+                   struct Tickets* tickets, struct Company* companies);
 
 #endif

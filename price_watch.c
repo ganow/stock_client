@@ -38,9 +38,9 @@ int main(int argc, char const *argv[])
         /* strategy部分 */
         int comp = 2;
         if (t % 2 == 0) {
-          Buy(money / getStockPrice(comp, companies), key, comp, fd, companies, tickets);
+          Buy(80, key, comp, fd, companies, tickets);
         } else if (t % 2 == 1) {
-          Sell(companies[comp].hold_stocks, key, comp, fd, companies, tickets);
+          Sell(80, key, comp, fd, companies, tickets);
         }
 
         /* ターン内で投げたリクエストに対する反応を取得する */

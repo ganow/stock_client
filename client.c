@@ -43,14 +43,17 @@ int main(int argc, char const *argv[])
 
         /* strategy部分 */
 
-        int comp = 2;
+        // int comp = 2;
 
-        if (t % 2 == 0) {
-            Buy(money/getStockPrice(comp, companies), key, comp, fd, companies, tickets);
-        } else if (t % 2 == 1) {
-            Sell(companies[comp].hold_stocks, key, comp, fd, companies, tickets);
-        } else {
-        }
+        // Buy(80, key, comp, fd, companies, tickets);
+        // if (t % 2 == 0) {
+        //     Buy(money/getStockPrice(comp, companies), key, comp, fd, companies, tickets);
+        // } else if (t % 2 == 1) {
+        //     Sell(companies[comp].hold_stocks-1, key, comp, fd, companies, tickets);
+        // } else {
+        // }
+
+        InitStrategy(fd, key, tickets, companies);
 
 
         /* ターン内で投げたリクエストに対する反応を取得する */
@@ -63,7 +66,7 @@ int main(int argc, char const *argv[])
 
             getData(fd, r_buf);
 
-            // dumpBuf(r_buf);
+            dumpBuf(r_buf);
 
             tmp_code = 0;
             tmp_key = 0;
@@ -75,9 +78,9 @@ int main(int argc, char const *argv[])
             tmp_code = getCode(r_buf);
             if (tmp_code == REQ_ACCEPT) {
                 int accepted_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
+                printf("%d th ticket accepted!!\n", accepted_idx);
                 if (accepted_idx != -1) {
                     money += ApplyTicket(accepted_idx, tickets, companies);
-                    printf("%d th ticket accepted!!\n", accepted_idx);
                 }
             } else if (tmp_code == UNKOWN_CODE || tmp_code == INVALID_KEY ||
                        tmp_code == TOO_MUCH_REQ || tmp_code == ID_NOT_EXIST ||

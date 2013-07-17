@@ -21,10 +21,21 @@ struct Ticket* MakeTicketFromBuf(const uint32_t *buf) {
     int id, value;
 
     key = getKey(buf);
-    id = ntohl(buf[2]);
-    value = ntohl(buf[3]);
+    // id = ntohl(buf[2]);
+    // value = ntohl(buf[3]);
 
-    return NewTicket(key, BUY, id, 0, value);
+    // id = getID(0, buf);
+    // value = getValue(0, buf);
+
+    for (int i = 0; i < COMPANY_NUM; i++) {
+        if (getValue(i, buf) != 0) {
+            id = getID(i, buf);
+            value = getValue(i, buf);
+            return NewTicket(key, BUY, id, 0, value);
+        }
+    }
+    printf("not found!!\n");
+    return NewTicket(0, BUY, 0, 0, 0);
 
 }
 
@@ -135,9 +146,9 @@ int ApplyTicket(const int idx, struct Tickets* tickets, struct Company* companie
 
     if (getDeal(ticket) == BUY) {
         diff_money *= -1;
-        companies[idx].hold_stocks += getStockNum(ticket);
+        companies[ticket->id].hold_stocks += getStockNum(ticket);
     } else if (getDeal(ticket) == SELL) {
-        companies[idx].hold_stocks -= getStockNum(ticket);
+        companies[ticket->id].hold_stocks -= getStockNum(ticket);
     } else {
         printf("something wrong in deal at tickets num: %d\n", idx);
         PrintTickets(tickets);

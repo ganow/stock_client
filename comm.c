@@ -45,6 +45,17 @@ int getData(const int fd, uint32_t *buf) {
         }
         buf[i] = tmp;
         total_read += len;
+        if (i == 1 && ntohl(tmp) == GAME_END) {
+            for (int j = 1; j <= 2; j++) {
+                len = -1;
+                while (len <= 0) {
+                    len = read(fd, &tmp, sizeof(tmp));
+                }
+                buf[i+j] = tmp;
+                total_read += len;
+            }
+            return total_read;
+        }
     }
 
     return total_read;
@@ -103,11 +114,15 @@ uint32_t getKey (const uint32_t* buf) {
 }
 
 int getID (const int idx, const uint32_t* buf) {
-    return ntohl(buf[2+2*idx]);
+    int id;
+    id = ntohl(buf[2+2*idx]);
+    return id;
 }
 
 int getValue (const int idx, const uint32_t* buf) {
-    return ntohl(buf[3+2*idx]);
+    int value;
+    value = ntohl(buf[3+2*idx]);
+    return value;
 }
 
 void dumpBuf (const uint32_t* buf) {
@@ -120,7 +135,8 @@ void dumpBuf (const uint32_t* buf) {
     if (getCode(buf) == TURN_START) {
         loop_num = COMPANY_NUM;
     } else {
-        loop_num = 1;
+        // loop_num = 1;
+        loop_num = COMPANY_NUM;
     }
 
     for (int i = 0; i < loop_num; i++) {
