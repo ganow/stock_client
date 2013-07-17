@@ -44,9 +44,9 @@ int main(int argc, char const *argv[])
         /* strategy部分 */
 
         if (t % 2 == 0) {
-            Buy(money/getStockPrice(5, companies), key, 0, fd, companies, tickets);
+            Buy(money/getStockPrice(5, companies), key, 5, fd, companies, tickets);
         } else if (t % 2 == 1) {
-            Sell(companies[5].hold_stocks, key, 0, fd, companies, tickets);
+            Sell(companies[5].hold_stocks, key, 5, fd, companies, tickets);
         } else {
         }
 
