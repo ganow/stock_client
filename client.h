@@ -19,6 +19,7 @@
 
 #define COMPANY_NUM 10
 #define DATA_NUM 2 + COMPANY_NUM * 2
+#define RESPONSE_SIZE 4
 #define DEAL_MAX 5
 #define TURNS 60
 #define TICKETS_MAX DEAL_MAX * TURNS
@@ -66,7 +67,10 @@ int get_stream(const char *host, const char *service);
 int getData(const int fd, uint32_t *buf);
 uint32_t Parse (const uint32_t* buf, struct Company* companies);
 uint32_t getCode(const uint32_t* buf);
+char * getCodeName(const uint32_t code);
 uint32_t getKey(const uint32_t* buf);
+int getID(const int idx, const uint32_t* buf);
+int getValue(const int idx, const uint32_t* buf);
 void dumpBuf(const uint32_t* buf);
 
 /* in tickets.c */

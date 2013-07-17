@@ -52,11 +52,13 @@ int main(int argc, char const *argv[])
 
     for (int t = 0; t < TURNS; t++) {
 
-        printf("%d th turn\n", t);
+        printf("-----------------------------%d th turn-----------------------------\n", t);
         PrintCompanies(companies);
 
         if (t % 2 == 0) {
-            Buy(10, key, 0, fd, companies, tickets);
+            // Buy(10, key, 0, fd, companies, tickets);
+            // Buy(10, key, 0, fd, companies, tickets);
+            // Buy(10, key, 0, fd, companies, tickets);
         } else if (t % 2 == 1) {
             Sell(10, key, 0, fd, companies, tickets);
         } else {

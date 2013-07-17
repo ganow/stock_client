@@ -46,6 +46,7 @@ int getData(const int fd, uint32_t *buf) {
             buf[total_read+i] = tmp_buf[i];
         }
         total_read += len;
+        printf("%d bytes read!!\n", len);
     }
 
     return total_read;
@@ -69,16 +70,52 @@ uint32_t getCode (const uint32_t* buf) {
     return code;
 }
 
+char * getCodeName (const uint32_t code) {
+    if (code == TURN_START) {
+        return "TURN_START";
+    } else if (code == REQ_ACCEPT) {
+        return "REQ_ACCEPT";
+    } else if (code == REQ_BUY) {
+        return "REQ_BUY";
+    } else if (code == REQ_SELL) {
+        return "REQ_SELL";
+    } else if (code == UNKOWN_CODE) {
+        return "UNKOWN_CODE";
+    } else if (code == INVALID_KEY) {
+        return "INVALID_KEY";
+    } else if (code == TOO_MUCH_REQ) {
+        return "TOO_MUCH_REQ";
+    } else if (code == ID_NOT_EXIST) {
+        return "ID_NOT_EXIST";
+    } else if (code == TOO_MUCH_BUY) {
+        return "TOO_MUCH_BUY";
+    } else if (code == TOO_MUCH_SELL) {
+        return "TOO_MUCH_SELL";
+    } else {
+        return "WRONG_CODE!!!!";
+    }
+}
+
 uint32_t getKey (const uint32_t* buf) {
     uint32_t key;
     key = ntohl(buf[0]);
     return key;
 }
 
+int getID (const int idx, const uint32_t* buf) {
+    return ntohl(buf[2+2*idx]);
+}
+
+int getValue (const int idx, const uint32_t* buf) {
+    return ntohl(buf[3+2*idx]);
+}
+
 void dumpBuf (const uint32_t* buf) {
     printf("start to dump buf\n");
 
-    for (int i = 0; i < DATA_NUM; i++) {
-        printf("%x\n", ntohl(buf[i]));
+    printf("key: %x  code: %s\n", ntohl(buf[0]), getCodeName(getCode(buf)));
+
+    for (int i = 0; i < COMPANY_NUM; i++) {
+        printf("id: %d  value: %d\n", getID(i, buf), getValue(i, buf));
     }
 }
