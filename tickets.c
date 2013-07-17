@@ -60,6 +60,10 @@ void PrintTickets(const struct Tickets* tickets) {
     printf("####end####\n");
 }
 
+const struct Ticket * getTicket (const int idx, const struct Tickets* tickets) {
+    return tickets->list[idx];
+}
+
 enum Deal getDeal (const struct Ticket* t) {
     return t->deal;
 }

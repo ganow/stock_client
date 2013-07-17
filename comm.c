@@ -89,6 +89,8 @@ char * getCodeName (const uint32_t code) {
         return "TOO_MUCH_BUY";
     } else if (code == TOO_MUCH_SELL) {
         return "TOO_MUCH_SELL";
+    } else if (code == GAME_END) {
+        return "GAME_END";
     } else {
         return "WRONG_CODE!!!!";
     }

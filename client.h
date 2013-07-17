@@ -27,6 +27,7 @@
 /* codes */
 #define TURN_START 0x00000000
 #define REQ_ACCEPT 0x00000001
+#define GAME_END 0x00000002
 #define REQ_BUY 0x00000100
 #define REQ_SELL 0x00000101
 
@@ -82,6 +83,7 @@ struct Ticket* MakeTicketFromBuf(const uint32_t* buf);
 struct Tickets* InitTickets();
 void PrintTicket(const struct Ticket* t);
 void PrintTickets(const struct Tickets* tickets);
+const struct Ticket* getTicket(const int idx, const struct Tickets* tickets);
 enum Deal getDeal(const struct Ticket* t);
 int getPrice(const struct Ticket* t);
 int getStockNum(const struct Ticket* t);
@@ -96,6 +98,7 @@ int ApplyTicket(const int idx, struct Tickets* tickets, struct Company* companie
 uint32_t InitCompanies(const uint32_t* buf, struct Company* companies);
 void PrintCompany(const struct Company* c);
 void PrintCompanies(const struct Company* companies);
+int getStockPrice(const int idx, const struct Company* companies);
 
 /* in trade.c */
 void Buy (const int stock_num, const int key, const int company_id, const int fd,

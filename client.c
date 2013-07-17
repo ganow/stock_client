@@ -43,20 +43,20 @@ int main(int argc, char const *argv[])
 
         /* strategy部分 */
 
-        Sell(10, key, 0, fd, companies, tickets);
-
-        // if (t % 2 == 0) {
-        //     // Buy(10, key, 0, fd, companies, tickets);
-        //     // Buy(10, key, 0, fd, companies, tickets);
-        //     // Buy(10, key, 0, fd, companies, tickets);
-        // } else if (t % 2 == 1) {
-        //     Sell(10, key, 0, fd, companies, tickets);
-        // } else {
-        // }
+        if (t % 2 == 0) {
+            Buy(money/getStockPrice(5, companies), key, 0, fd, companies, tickets);
+        } else if (t % 2 == 1) {
+            Sell(companies[5].hold_stocks, key, 0, fd, companies, tickets);
+        } else {
+        }
 
 
         /* ターン内で投げたリクエストに対する反応を取得する */
         state = 0;
+        // stateでゲームの進行状況を管理
+        // state 0: 同一ターン内
+        // state 1: 次のターンに進行
+        // state 2: ゲーム終了。結果の出力へ
         while (state == 0) {
 
             getData(fd, r_buf);
@@ -89,12 +89,26 @@ int main(int argc, char const *argv[])
             } else if (tmp_code == TURN_START) {
                 key = Parse(r_buf, companies);
                 state = 1;
+            } else if (tmp_code == GAME_END) {
+                state = 2;
             } else {
                 printf("something wrong in code\n");
             }
         }
 
+        if (state == 2) {
+            break;
+        }
+
     }
+
+    printf("\n\n\n");
+    printf("##################################\n");
+    printf("##############RESULT##############\n");
+    printf("##################################\n\n");
+
+    printf("your rank: %d\n", getID(0, r_buf));
+    printf("your budget: %d\n", getValue(0, r_buf));
 
     close(fd);
 

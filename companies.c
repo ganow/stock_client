@@ -24,3 +24,7 @@ void PrintCompanies(const struct Company* companies) {
         PrintCompany(&companies[i]);
     }
 }
+
+int getStockPrice (const int idx, const struct Company* companies) {
+    return companies[idx].stock_price;
+}
