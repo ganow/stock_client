@@ -11,7 +11,7 @@ void Buy (const int stock_num, const int key, const int company_id, const int fd
       write(fd, w_int_buf, sizeof(w_int_buf));
     }
 
-    printf("BUY id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
+    // printf("BUY id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
 
 }
 
@@ -26,6 +26,6 @@ void Sell (const int stock_num, const int key, const int company_id, const int f
       write(fd, w_int_buf, sizeof(w_int_buf));
     }
 
-    printf("SELL id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
+    // printf("SELL id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
 
 }

@@ -114,10 +114,10 @@ int isContain(struct Ticket* t, const struct Tickets* tickets) {
     }
 
     /* for debugging */
-    printf("There aren't such kind of ticket\n");
-    PrintTicket(t);
-    printf("Now tickets:\n");
-    PrintTickets(tickets);
+    // printf("There aren't such kind of ticket\n");
+    // PrintTicket(t);
+    // printf("Now tickets:\n");
+    // PrintTickets(tickets);
     free(t);
     return -1;
 }

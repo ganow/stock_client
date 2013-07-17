@@ -1,6 +1,6 @@
 # CC = $(HOME)/local/bin/gcc
 CC = /usr/bin/gcc
-CFLAGS = -Wall -std=c99 -I/usr/include -D_POSIX_C_SOURCE=200112L
+CFLAGS = -O3 -Wall -std=c99 -I/usr/include -D_POSIX_C_SOURCE=200112L
 
 BINARY = client
 SOURCE = comm.c tickets.c companies.c trade.c strategy.c client.c
