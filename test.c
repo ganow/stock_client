@@ -2,78 +2,26 @@
 
 int main(int argc, char const *argv[])
 {
-    // uint32_t key[3] = {112, 223, 35};
-    // enum Deal d[3] = {BUY, SELL, BUY};
-    // int id[3] = {1, 2, 3};
-    // int s_price[3] = {10, 100, 2};
-    // int s_num[3] = {100, 200, 150};
 
-    // struct Tickets* tickets = InitTickets();
+    struct Tickets* tickets = InitTickets();
 
-    // // for (int i = 0; i < 3; i++) {
-    // //     struct Ticket* t = NewTicket(key[i], d[i], id[i], s_price[i], s_num[i]);
-    // //     // PrintTicket(t);
+    PrintTickets(tickets);
 
-    // //     printf("\n");
-    // //     Push(t, tickets);
+    Push(NewTicket(1, BUY, 0, 10, 10), tickets);
 
-    // //     // PrintTickets(tickets);
-    // // }
+    PrintTickets(tickets);
 
-    // // PrintTickets(tickets);
+    Push(NewTicket(2, SELL, 1, 1, 11), tickets);
 
-    // // int num;
+    PrintTickets(tickets);
 
-    // // if (num = isContain(NewTicket(key[1], d[1], id[1], s_price[1], s_num[1]), tickets) != -1) {
-    // //     PrintTicket(tickets->list[num]);
-    // //     printf("num: %d\n", num);
-    // // }
+    Push(NewTicket(3, SELL, 2, 100, 1), tickets);
 
-    // for (int i = 0; i < 200; i++) {
-    //     Push(NewTicket(key[0], d[0], id[0], s_price[0], s_num[0]), tickets);
-    // }
+    PrintTickets(tickets);
 
-    // for (int i = 0; i < 200; i++) {
-    //     DeleteTicket(i, tickets);
-    // }
+    DeleteTicket(1, tickets);
 
-    // PrintTickets(tickets);
-
-    int fd; // ファイルディスクリプタ。サーバーとの接続
-    char message[BUFSIZE];
-    char buf[DATA_NUM];
-    // fd = get_stream("nepro.sfc.wide.ad.jp", "32768");
-
-    const char *host = argv[1];
-    const char *service = argv[2];
-
-    /* サーバーとの接続 */
-    fd = get_stream(host, service);
-    if (fd == -1)
-    {
-        printf("get_stream error!!\n");
-        exit(-1);
-    }
-
-    /* 接続の確立 */
-    int len = -1;
-    while (len == -1) {
-      len = read(fd, message, sizeof(message));
-      printf("reading...\n");
-    }
-    printf("finish read\n");
-    printf("len: %d\n", len);
-
-    printf("%s\n", message);
-
-    // struct Company companies[COMPANY_NUM];
-    // uint32_t key;
-
-    // key = InitCompanies(buf, companies);
-
-    // PrintCompanies(companies);
-
-    // printf("\n\nkey: %u\n", key);
+    PrintTickets(tickets);
 
     return 0;
 }

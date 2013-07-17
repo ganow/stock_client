@@ -16,28 +16,16 @@ struct Ticket* NewTicket(const uint32_t key, const enum Deal deal,
     return rtn;
 }
 
-void PrintTicket(const struct Ticket* t) {
-    printf("##Ticket##\n");
-    printf("addr: %p\n", t);
-    printf("key: %u\n", t->key);
-    if (t->deal == BUY) {
-        printf("deal: BUY\n");
-    } else if (t->deal == SELL) {
-        printf("deal: SELL\n");
-    } else {
-        printf("deal: ERROR\n");
-    }
-    printf("id: %u\n", t->id);
-    printf("stock_price: %u\n", t->stock_price);
-    printf("stock_num: %u\n", t->stock_num);
-}
+struct Ticket* MakeTicketFromBuf(const uint32_t *buf) {
+    uint32_t key;
+    int id, value;
 
-void PrintTickets(const struct Tickets* tickets) {
-    printf("##Tickets##\n");
-    for (int i = 0; i < tickets->available_num; i++) {
-        PrintTicket(tickets->list[i]);
-        printf("\n");
-    }
+    key = getKey(buf);
+    id = ntohl(buf[2]);
+    value = ntohl(buf[3]);
+
+    return NewTicket(key, BUY, id, 0, value);
+
 }
 
 struct Tickets* InitTickets() {
@@ -49,18 +37,48 @@ struct Tickets* InitTickets() {
     return rtn;
 }
 
+void PrintTicket(const struct Ticket* t) {
+    printf("##Ticket##  ");
+    printf("key: %x  ", t->key);
+    if (t->deal == BUY) {
+        printf("deal: BUY  ");
+    } else if (t->deal == SELL) {
+        printf("deal: SELL  ");
+    } else {
+        printf("deal: ERROR  ");
+    }
+    printf("id: %u  ", t->id);
+    printf("stock_price: %u  ", t->stock_price);
+    printf("stock_num: %u\n", t->stock_num);
+}
+
+void PrintTickets(const struct Tickets* tickets) {
+    printf("\n##Tickets##\n");
+    for (int i = 0; i < tickets->available_num; i++) {
+        PrintTicket(tickets->list[i]);
+    }
+    printf("####end####\n");
+}
+
+enum Deal getDeal (const struct Ticket* t) {
+    return t->deal;
+}
+
+int getPrice (const struct Ticket* t) {
+    return t->stock_price;
+}
+
+int getStockNum (const struct Ticket* t) {
+    return t->stock_num;
+}
+
 void Push (struct Ticket* t, struct Tickets* tickets) {
     if (tickets->list[tickets->available_num] != NULL) {
         printf("error, available_num is incompatible with actual list\n");
         exit(-1);
     }
-    // printf("before\n");
-    // PrintTickets(tickets);
     tickets->list[tickets->available_num] = t;
     tickets->available_num += 1;
-    // printf("after\n");
-    // PrintTickets(tickets);
-    // printf("finish push\n");
 }
 
 void DeleteTicket(const int idx, struct Tickets* tickets) {
@@ -73,7 +91,9 @@ void DeleteTicket(const int idx, struct Tickets* tickets) {
 }
 
 int isEqual (const struct Ticket* t1, const struct Ticket* t2) {
-    if (t1->key == t2->key && t1->deal == t2->deal &&
+    // if (t1->key == t2->key && t1->deal == t2->deal &&
+    //     t1->id == t2->id && t1->stock_num == t2->stock_num) {
+    if (t1->key == t2->key &&
         t1->id == t2->id && t1->stock_num == t2->stock_num) {
         return 1;
     } else {
@@ -88,27 +108,36 @@ int isContain(struct Ticket* t, const struct Tickets* tickets) {
             return i;
         }
     }
-    printf("There aren't such kind of ticket\n");
-    PrintTicket(t);
+    // printf("There aren't such kind of ticket\n");
+    // PrintTicket(t);
+    // printf("Now tickets:\n");
+    // PrintTickets(tickets);
+    free(t);
     return -1;
 }
 
-struct Ticket* MakeTicketFromBuf(const uint32_t *buf) {
-    uint32_t key;
-    int id, value;
-    enum Deal deal;
+int ApplyTicket(const int idx, struct Tickets* tickets, struct Company* companies) {
+    /*
+    返り値として、所持金の変化分を返す。
+    対応するticketの削除
+    companies構造体の中の、対応する所持株数を変更する
+    */
+    int diff_money = 0;
+    struct Ticket* ticket = tickets->list[idx];
 
-    key = ntohl(getKey(buf));
+    diff_money += getPrice(ticket) * getStockNum(ticket);
 
-    if (getCode(buf) == REQ_BUY) {
-        deal = BUY;
-    } else if (getCode(buf) == REQ_SELL) {
-        deal = SELL;
+    if (getDeal(ticket) == BUY) {
+        diff_money *= -1;
+        companies[idx].hold_stocks += getStockNum(ticket);
+    } else if (getDeal(ticket) == SELL) {
+        companies[idx].hold_stocks -= getStockNum(ticket);
+    } else {
+        printf("something wrong in deal at tickets num: %d\n", idx);
+        PrintTickets(tickets);
     }
-
-    id = ntohl(buf[2]);
-    id = ntohl(buf[3]);
-
-    return NewTicket(key, deal, id, 0, value);
-
+    DeleteTicket(idx, tickets);
+    return diff_money;
 }
+
+

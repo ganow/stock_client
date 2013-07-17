@@ -36,17 +36,15 @@ int getData(const int fd, uint32_t *buf) {
     int len = -1;
     int total_read = 0;
 
-    uint32_t tmp_buf[BUFSIZE];
+    uint32_t tmp;
 
-    while (total_read < DATA_NUM) {
-        while (len < 0) {
-            len = read(fd, tmp_buf, sizeof(tmp_buf));
+    for (int i = 0; i < DATA_NUM; i++) {
+        len = -1;
+        while (len <= 0) {
+            len = read(fd, &tmp, sizeof(tmp));
         }
-        for (int i = 0; i < len; i++) {
-            buf[total_read+i] = tmp_buf[i];
-        }
+        buf[i] = tmp;
         total_read += len;
-        printf("%d bytes read!!\n", len);
     }
 
     return total_read;
@@ -111,11 +109,20 @@ int getValue (const int idx, const uint32_t* buf) {
 }
 
 void dumpBuf (const uint32_t* buf) {
-    printf("start to dump buf\n");
+    printf("\n##########start to dump buf##########\n");
 
     printf("key: %x  code: %s\n", ntohl(buf[0]), getCodeName(getCode(buf)));
 
-    for (int i = 0; i < COMPANY_NUM; i++) {
+    int loop_num = 0;
+
+    if (getCode(buf) == TURN_START) {
+        loop_num = COMPANY_NUM;
+    } else {
+        loop_num = 1;
+    }
+
+    for (int i = 0; i < loop_num; i++) {
         printf("id: %d  value: %d\n", getID(i, buf), getValue(i, buf));
     }
+    printf("##########    end dump     ##########\n\n");
 }

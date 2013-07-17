@@ -3,12 +3,10 @@
 int main(int argc, char const *argv[])
 {
     int fd; // ファイルディスクリプタ。サーバーとの接続
-    char message[26];
     uint32_t r_buf[DATA_NUM];
-    // fd = get_stream("nepro.sfc.wide.ad.jp", "32768");
 
-    const char *host = argv[1];
-    const char *service = argv[2];
+    const char *host = argv[1]; // 第一引数 ex) localhost
+    const char *service = argv[2]; // 第二引数 ex) 1111
 
     /* サーバーとの接続 */
     fd = get_stream(host, service);
@@ -18,83 +16,77 @@ int main(int argc, char const *argv[])
         exit(-1);
     }
 
-    /* 接続の確立 */
+    /* 一回目のデータ取得 */
     int len = -1;
-    // while (len <= 0) {
-    //   len = read(fd, message, sizeof(message));
-    //   printf("reading...\n");
-    // }
-    // printf("finish read\n");
-    // printf("len: %d\n", len);
-
-    // printf("%s\n", message);
-
-    /* はじめに送られてくるリストでcompaniesを初期化 */
-    // len = -1;
-    // while (len < 0) {
-    //     len = read(fd, r_buf, sizeof(r_buf));
-    //     printf("waiting init list...\n");
-    // }
 
     len = getData(fd, r_buf);
     printf("finish read\n");
     printf("len: %d\n", len);
-    dumpBuf(r_buf);
+    // dumpBuf(r_buf);
 
+    /* ゲームに必要なデータの初期化 */
     struct Company companies[COMPANY_NUM];
     struct Tickets* tickets = InitTickets();
-    uint32_t key;
+    uint32_t key, tmp_key, tmp_code;
     int money = 10000;
+    int state = 0;
 
     key = InitCompanies(r_buf, companies);
 
     PrintCompanies(companies);
 
+    /* メインルーチン。ターン数分実行される */
     for (int t = 0; t < TURNS; t++) {
 
-        printf("-----------------------------%d th turn-----------------------------\n", t);
+        printf("\n\n------------------------%d th turn  money: %d------------------------\n", t, money);
         PrintCompanies(companies);
 
-        if (t % 2 == 0) {
-            // Buy(10, key, 0, fd, companies, tickets);
-            // Buy(10, key, 0, fd, companies, tickets);
-            // Buy(10, key, 0, fd, companies, tickets);
-        } else if (t % 2 == 1) {
-            Sell(10, key, 0, fd, companies, tickets);
-        } else {
-        }
+        /* strategy部分 */
 
-        int state = 0;
+        Sell(10, key, 0, fd, companies, tickets);
 
+        // if (t % 2 == 0) {
+        //     // Buy(10, key, 0, fd, companies, tickets);
+        //     // Buy(10, key, 0, fd, companies, tickets);
+        //     // Buy(10, key, 0, fd, companies, tickets);
+        // } else if (t % 2 == 1) {
+        //     Sell(10, key, 0, fd, companies, tickets);
+        // } else {
+        // }
+
+
+        /* ターン内で投げたリクエストに対する反応を取得する */
+        state = 0;
         while (state == 0) {
 
-            // len = -1;
-            // while (len <= 0) {
-            //     len = read(fd, r_buf, sizeof(r_buf));
-            //     printf("waiting init list...\n");
-            // }
             getData(fd, r_buf);
 
-            dumpBuf(r_buf);
+            // dumpBuf(r_buf);
 
-            uint32_t code;
-            uint32_t tmp_key;
+            tmp_code = 0;
+            tmp_key = 0;
             tmp_key = getKey(r_buf);
             if (key != tmp_key) {
                 state = 1;
                 printf("next turn\n");
             }
-            code = getCode(r_buf);
-            if (code == REQ_ACCEPT) {
+            tmp_code = getCode(r_buf);
+            if (tmp_code == REQ_ACCEPT) {
                 int accepted_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
                 if (accepted_idx != -1) {
-                    DeleteTicket(accepted_idx, tickets);
+                    money += ApplyTicket(accepted_idx, tickets, companies);
+                    printf("%d th ticket accepted!!\n", accepted_idx);
                 }
-            } else if (code == UNKOWN_CODE || code == INVALID_KEY ||
-                       code == TOO_MUCH_REQ || code == ID_NOT_EXIST ||
-                       code == TOO_MUCH_BUY || code == TOO_MUCH_SELL) {
-                printf("code error type: %x\n", code);
-            } else if (code == TURN_START) {
+            } else if (tmp_code == UNKOWN_CODE || tmp_code == INVALID_KEY ||
+                       tmp_code == TOO_MUCH_REQ || tmp_code == ID_NOT_EXIST ||
+                       tmp_code == TOO_MUCH_BUY || tmp_code == TOO_MUCH_SELL) {
+                printf("code error type: %s\n", getCodeName(tmp_code));
+                int rejected_idx = isContain(MakeTicketFromBuf(r_buf), tickets);
+                printf("rejected ticket: %d\n", rejected_idx);
+                if (rejected_idx != -1) {
+                    DeleteTicket(rejected_idx, tickets);
+                }
+            } else if (tmp_code == TURN_START) {
                 key = Parse(r_buf, companies);
                 state = 1;
             } else {

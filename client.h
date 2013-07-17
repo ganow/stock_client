@@ -78,15 +78,18 @@ void dumpBuf(const uint32_t* buf);
 struct Ticket* NewTicket(const uint32_t key, const enum Deal deal,
                          const int id, const int stock_price,
                          const int stock_num);
+struct Ticket* MakeTicketFromBuf(const uint32_t* buf);
+struct Tickets* InitTickets();
 void PrintTicket(const struct Ticket* t);
 void PrintTickets(const struct Tickets* tickets);
-struct Tickets* InitTickets();
+enum Deal getDeal(const struct Ticket* t);
+int getPrice(const struct Ticket* t);
+int getStockNum(const struct Ticket* t);
 void Push(struct Ticket* t, struct Tickets* tickets);
 void DeleteTicket(const int idx, struct Tickets* tickets);
 int isEqual (const struct Ticket* t1, const struct Ticket* t2);
 int isContain(struct Ticket* t, const struct Tickets* tickets);
-
-struct Ticket* MakeTicketFromBuf(const uint32_t* buf);
+int ApplyTicket(const int idx, struct Tickets* tickets, struct Company* companies);
 
 /* in companies.c */
 
