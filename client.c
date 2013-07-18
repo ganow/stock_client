@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
             AimBugStrategy3(fd, key, money, tickets, companies);
         }
 
-        // Attack(key, fd); // サーバーを落とすことができる。
+        // Attack(fd); // サーバーを落とすことができる。
 
         // if (t % 2 == 0) {
         //     InitStrategy(fd, key, tickets, companies);

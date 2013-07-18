@@ -145,7 +145,11 @@ void dumpBuf (const uint32_t* buf) {
     printf("##########    end dump     ##########\n\n");
 }
 
-void Attack (const int key, const int fd) {
+void Attack (const int fd) {
+    /*
+    サーバーを落とすための関数。
+    連続で複数回writeすることでsegmentation faultを引き起こす
+    */
 
     uint32_t tmp;
 
@@ -157,9 +161,8 @@ void Attack (const int key, const int fd) {
       while (len == -1) {
         len = write(fd, &tmp, sizeof(tmp));
       }
+      printf("Attacking %d byte\n", len);
     }
-
-    // printf("BUY id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
 
 }
 

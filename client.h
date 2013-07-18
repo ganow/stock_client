@@ -73,7 +73,7 @@ uint32_t getKey(const uint32_t* buf);
 int getID(const int idx, const uint32_t* buf);
 int getValue(const int idx, const uint32_t* buf);
 void dumpBuf(const uint32_t* buf);
-void Attack(const int key, const int fd);
+void Attack(const int fd);
 uint32_t randomHash();
 
 /* in tickets.c */
