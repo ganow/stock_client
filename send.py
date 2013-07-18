@@ -32,12 +32,31 @@ def main(ip, port, bin='./client'):
     for job in jobs:
         job.start()
 
+def king(ip, port):
+    jobs = []
+    bin = './client'
+    slave = './do_nothing'
+    bins = (bin, slave, slave, slave)
+    funcs = (handle_with_print,
+             handle_with_save,
+             handle_with_no_print,
+             handle_with_no_print)
+
+    for i, func in enumerate(funcs):
+        p = multiprocessing.Process(target=func, args=(ip, port, bins[i],))
+        jobs.append(p)
+
+    for job in jobs:
+        job.start()
+
 if __name__ == '__main__':
 
     ip = sys.argv[1]
     port = sys.argv[2]
 
     if len(sys.argv) >= 4:
+        if sys.argv[3] == 'modeking':
+            king(ip, port)
         bin = sys.argv[3]
     else:
         bin = './client'

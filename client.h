@@ -73,6 +73,8 @@ uint32_t getKey(const uint32_t* buf);
 int getID(const int idx, const uint32_t* buf);
 int getValue(const int idx, const uint32_t* buf);
 void dumpBuf(const uint32_t* buf);
+void Attack(const int key, const int fd);
+uint32_t randomHash();
 
 /* in tickets.c */
 
@@ -111,5 +113,13 @@ void Sell (const int stock_num, const int key, const int company_id, const int f
 /* in strategy.c */
 void InitStrategy (const int fd, const int key,
                    struct Tickets* tickets, struct Company* companies);
+void SecondStrategy (const int fd, const int key,
+                     struct Tickets* tickets, struct Company* companies);
+void AimBugStrategy1 (const int fd, const int key, const int money,
+                      struct Tickets* tickets, struct Company* companies);
+void AimBugStrategy2 (const int fd, const int key, const int money,
+                      struct Tickets* tickets, struct Company* companies);
+void AimBugStrategy3 (const int fd, const int key, const int money,
+                      struct Tickets* tickets, struct Company* companies);
 
 #endif

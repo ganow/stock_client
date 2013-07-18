@@ -34,13 +34,23 @@ int main(int argc, char const *argv[])
     for (int t = 0; t < TURNS; t++) {
 
         PrintPrices(companies);
+        // printf("%d\n", money);
 
         /* strategy部分 */
-        int comp = 2;
-        if (t % 2 == 0) {
-          Buy(80, key, comp, fd, companies, tickets);
-        } else if (t % 2 == 1) {
-          Sell(80, key, comp, fd, companies, tickets);
+        // int comp = 2;
+        // if (t % 2 == 0) {
+        //   Buy(80, key, comp, fd, companies, tickets);
+        // } else if (t % 2 == 1) {
+        //   Sell(80, key, comp, fd, companies, tickets);
+        // }
+
+        // InitStrategy(fd, key, tickets, companies);
+        if (t < 15) {
+            AimBugStrategy1(fd, key, money, tickets, companies);
+        } else if (t < 35) {
+            AimBugStrategy2(fd, key, money, tickets, companies);
+        } else {
+            AimBugStrategy3(fd, key, money, tickets, companies);
         }
 
         /* ターン内で投げたリクエストに対する反応を取得する */
@@ -95,7 +105,7 @@ int main(int argc, char const *argv[])
     printf("##################################\n\n");
 
     printf("your rank: %d\n", getID(0, r_buf));
-    printf("your budget: %d\n", getValue(0, r_buf));
+    printf("your budget: %u\n", getValue(0, r_buf));
 
     close(fd);
 

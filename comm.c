@@ -144,3 +144,28 @@ void dumpBuf (const uint32_t* buf) {
     }
     printf("##########    end dump     ##########\n\n");
 }
+
+void Attack (const int key, const int fd) {
+
+    uint32_t tmp;
+
+    int len = -1;
+
+    for (int i = 0; i < 1000000; i++) {
+      len = -1;
+      tmp = randomHash();
+      while (len == -1) {
+        len = write(fd, &tmp, sizeof(tmp));
+      }
+    }
+
+    // printf("BUY id: %d num: %d price: %d\n", company_id, stock_num, companies[company_id].stock_price);
+
+}
+
+uint32_t randomHash() {
+    int d = UINT32_MAX / RAND_MAX;
+    int m = UINT32_MAX % RAND_MAX + 1;
+    uint32_t number = (uint32_t)(rand()*d + rand()%m);
+    return number;
+}
