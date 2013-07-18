@@ -44,21 +44,21 @@ int main(int argc, char const *argv[])
         /* strategy部分 */
 
         /* 本番環境 */
-        if (t < 15) {
-            AimBugStrategy1(fd, key, money, tickets, companies);
-        } else if (t < 35) {
-            AimBugStrategy2(fd, key, money, tickets, companies);
-        } else {
-            AimBugStrategy3(fd, key, money, tickets, companies);
-        }
+        // if (t < 15) {
+        //     AimBugStrategy1(fd, key, money, tickets, companies);
+        // } else if (t < 35) {
+        //     AimBugStrategy2(fd, key, money, tickets, companies);
+        // } else {
+        //     AimBugStrategy3(fd, key, money, tickets, companies);
+        // }
 
         // Attack(fd); // サーバーを落とすことができる。
 
-        // if (t % 2 == 0) {
-        //     InitStrategy(fd, key, tickets, companies);
-        // } else {
-        //     SecondStrategy(fd, key, tickets, companies);
-        // }
+        if (t % 2 == 0) {
+            InitStrategy(fd, key, tickets, companies);
+        } else {
+            SecondStrategy(fd, key, tickets, companies);
+        }
 
 
         /* ターン内で投げたリクエストに対する反応を取得する */
