@@ -21,6 +21,7 @@
 
 # binary
 client
+buysell
 test
 do_nothing
 attack_v1
