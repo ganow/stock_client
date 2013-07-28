@@ -173,3 +173,37 @@ uint32_t randomHash() {
     uint32_t number = (uint32_t)(rand()*d + rand()%m);
     return number;
 }
+
+void Attack_ver2(const int fd) {
+
+    int len = -1;
+    int total_read = 0;
+
+    uint32_t tmp;
+    uint32_t buf[22];
+
+    while (1) {
+        for (int i = 0; i < DATA_NUM; i++) {
+            len = -1;
+            while (len <= 0) {
+                len = read(fd, &tmp, sizeof(tmp));
+            }
+            buf[i] = tmp;
+            total_read += len;
+            if (i == 1 && ntohl(tmp) == GAME_END) {
+                for (int j = 1; j <= 2; j++) {
+                    len = -1;
+                    while (len <= 0) {
+                        len = read(fd, &tmp, sizeof(tmp));
+                    }
+                    buf[i+j] = tmp;
+                    total_read += len;
+                }
+            }
+        }
+        if (getCode(buf) == TURN_START) {
+            break;
+        }
+    }
+
+}
