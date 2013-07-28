@@ -32,9 +32,8 @@ def main(ip, port, bin='./client'):
     for job in jobs:
         job.start()
 
-def king(ip, port):
+def king(ip, port, bin='./client'):
     jobs = []
-    bin = './client'
     slave = './do_nothing'
     bins = (bin, slave, slave, slave)
     funcs = (handle_with_print,
@@ -56,7 +55,8 @@ if __name__ == '__main__':
 
     if len(sys.argv) >= 4:
         if sys.argv[3] == 'modeking':
-            king(ip, port)
+            bin = sys.argv[4]
+            king(ip, port, bin)
         bin = sys.argv[3]
     else:
         bin = './client'
