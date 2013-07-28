@@ -104,3 +104,37 @@ void AimBugStrategy3 (const int fd, const int key, const int money,
         Buy(each_budget / getStockPrice(buy_list[i], companies), key, buy_list[i], fd, companies, tickets);
     }
 }
+
+/*
+以下の関数は、2013/7/28現在、恐らく存在するであろうサーバー側の問題点をつくための関数。
+(現時点でサーバー側が未だSellの実装にエラーがあるため確認できず。)
+リクエストが成立しない場合でもそのリクエストが株価の変動に影響を与える可能性をつこうとしている。
+はじめから1社に対して集中的に売却リクエスト、株価が0に落ち込んだ段階でuint32_tの最大値分購入、
+少しでも価格が上昇した時点で全て売却して終了
+*/
+
+void AimBugStrategy_ver2 (const int fd, const int key, const int money,
+                          struct Tickets* tickets, struct Company* companies) {
+    static int state;
+    if (state == 0) {
+        if (companies[7].stock_price <= 0) {
+            Buy(UINT32_MAX, key, 7, fd, companies, tickets);
+            state = 1;
+        } else {
+            for (int i = 0; i < 5; i++) {
+                Sell(UINT32_MAX, key, 7, fd, companies, tickets);
+            }
+        }
+    } else if (state == 1) {
+        if (companies[7].stock_price > 0) {
+            Sell(UINT32_MAX, key, 7, fd, companies, tickets);
+            state = 2;
+        } else {
+            state = 1;
+        }
+    } else if (state == 2) {
+        printf("ore no game wa owari da\n");
+    } else {
+        printf("nanika ga matigatte iru zo!!\n");
+    }
+}

