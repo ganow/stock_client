@@ -184,7 +184,7 @@ void Attack_ver2(const int fd) {
 
     while (1) {
 
-        for (int i = 0; i < DATA_NUM; i++) {
+        for (int i = 0; i < 4; i++) {
           len = -1;
           tmp = randomHash();
           while (len == -1) {
@@ -209,6 +209,7 @@ void Attack_ver2(const int fd) {
                     buf[i+j] = tmp;
                     total_read += len;
                 }
+                break;
             }
         }
         if (getCode(buf) == TURN_START) {
