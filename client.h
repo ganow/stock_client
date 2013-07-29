@@ -126,6 +126,8 @@ void InitStrategy (const int fd, const int key,
                    struct Tickets* tickets, struct Company* companies);
 void SecondStrategy (const int fd, const int key,
                      struct Tickets* tickets, struct Company* companies);
+void ThirdBuyStrategy (const int fd, const int key, const int money,
+                       struct Tickets* tickets, struct Company* companies);
 void AimBugStrategy1 (const int fd, const int key, const int money,
                       struct Tickets* tickets, struct Company* companies);
 void AimBugStrategy2 (const int fd, const int key, const int money,

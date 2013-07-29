@@ -32,6 +32,17 @@ void SecondStrategy (const int fd, const int key,
     }
 }
 
+void ThirdBuyStrategy (const int fd, const int key, const int money,
+                       struct Tickets* tickets, struct Company* companies) {
+    int buy_list[5] = {1, 3, 4, 6, 8};
+    int each_budget = money / 5;
+
+    for (int i = 0; i < 5; i++) {
+        Buy(each_budget / getStockPrice(buy_list[i], companies), key, buy_list[i], fd, companies, tickets);
+    }
+}
+
+
 /*
 以下は現時点(2013/07/18 11:59)でのサーバー側の不具合をついた戦略
 
