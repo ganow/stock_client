@@ -25,9 +25,9 @@ buysell
 test
 do_nothing
 attack_v1
-aim_bug_v1
-aim_bug_v2
-aim_bug_v2_with_attack_v2
+aimbug_v1
+aimbug_v2
+aimbug_v2_with_attack_v2
 
 # dump files
 out.txt
@@ -39,4 +39,6 @@ out.txt
 *~
 log_*
 logs/
+
+doc/
 

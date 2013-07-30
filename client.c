@@ -54,12 +54,15 @@ int main(int argc, char const *argv[])
 
         // Attack(fd); // サーバーを落とすことができる。
 
-        if (t % 2 == 0) {
+        if (t == 0) {
             InitStrategy(fd, key, tickets, companies);
-        } else {
+        } else if (t % 2 == 1) {
             SecondStrategy(fd, key, tickets, companies);
+        } else if (t % 2 == 0) {
+            ThirdBuyStrategy(fd, key, money, tickets, companies);
+        } else {
+            printf("bug!!!\n");
         }
-
 
         /* ターン内で投げたリクエストに対する反応を取得する */
         state = 0;
