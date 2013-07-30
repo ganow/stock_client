@@ -1,0 +1,238 @@
+\documentclass{article}
+
+\title{
+    Document for the Stock Trading Client
+}
+
+\author{
+    Yoshihiro Nagano
+    \thanks{Keio Univ. 3rd grade,
+            login name\texttt{:t11695yn},
+            student num\texttt{:71146957}}
+}
+
+\date{\today}
+
+\NeedsTeXFormat{pLaTeX2e}
+
+\setcounter{footnote}{1} % footnoteのカウンターを一つ分進める
+
+\usepackage{multicol} % 段組用パッケージ
+% \usepackage[dvips]{graphicx} % png,jpg,pdfなどの貼りつけ用パッケージ
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{url} % URL入力用パッケージ
+\usepackage{comment} % コメントアウト用
+\usepackage{verbatim} % コメントアウト用
+\usepackage[dvipdfmx]{color} % 色付け
+\usepackage{subfigure} % 複数の画像を並べて配置するときにキャプションをいくつもつけるため
+\usepackage{nidanfloat} % 段組をぶち抜いて図を入れる用
+\usepackage{bm} % 数式中の太字ベクトル用
+\usepackage{listings, jlisting} % ソースコード表示用
+\usepackage[scaled]{helvet} % Helveticaのサイズ補正
+\usepackage{txfonts} % 数式用のフォント
+\usepackage{wrapfig} % 画像回り込み用
+
+\newcommand{\figref}[1]{\figurename\ref{#1}} % 図の番号参照のオーバーロード
+\newcommand{\tabref}[1]{\tablename\ref{#1}} % テーブルの番号参照のオーバーロード
+
+\setlength{\textwidth}{\paperwidth}     % 紙面横幅を本文領域にする（RIGHT=-LEFT）
+\setlength{\oddsidemargin}{-0.4truemm}  % 左の余白を25mm(=1inch-0.4mm)に
+\setlength{\evensidemargin}{-0.4truemm} %
+\addtolength{\textwidth}{-50truemm}     % 右の余白も20mm（RIGHT=-LEFT）
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\renewcommand{\lstlistingname}{Program}
+\lstset{%
+    language=C,
+    basicstyle=\ttfamily\scriptsize,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    %
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{black},
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    title=\lstname,
+    %
+    keywordstyle=\color{blue},
+    commentstyle=\color{dkgreen},
+    stringstyle=\color{mauve},
+    classoffset=1
+}
+
+\begin{document}
+
+    % \twocolumn[
+        \maketitle
+
+        \section{Summary} % (fold)
+        \label{sec:summary}
+
+            This is the client program for the virtual stock trading game.
+
+        % section summary (end)
+
+    %     \vspace{1cm}
+    % ]
+
+    \section{Protocol} % (fold)
+    \label{sec:protocol}
+
+        The server side sends company list in uint32\_t * 12 data array structure at the beginning of each turn.
+        And that server responses to clients request by the same data structure.
+        The table showed below(\tabref{tab:data_structure}) is the strucuture comming from the server.
+
+        \begin{table}[h]
+            \begin{center}
+                \begin{tabular}{ll}
+                KEY & CODE \\
+                COMPANY\_ID & VALUE \\
+                COMPANY\_ID & VALUE \\
+                ... \\
+                COMPANY\_ID & VALUE
+                \end{tabular}
+                \caption{data format}
+                \label{tab:data_structure}
+            \end{center}
+        \end{table}
+
+        KEY is the random number for detecting whether a request is in the same turn or not.
+        It is issued turn by turn.
+        CODE specificate the type of the message.
+        The table showed below(\tabref{tab:message_list}) is the list actual CODE list.
+
+        When the beginning of the turn,
+        the CODE in the message from the server will be 0x000,
+        and all VALUEs are filld by the stock price of each company.
+        Client side decide own strategy by this information,
+        and send the requests to the server.
+        Clients can send two types of requests(BUY and SELL),
+        and the CODEs are 0x100 and 0x101 respectively.
+        The upper limit of the number of sending requests in each turn is 5.
+        If the server receive more than 5 requests from one client,
+        she will send a response the CODE type of which is 0x404 or 0x405.
+
+    % section protocol (end)
+
+    \newpage
+
+    \begin{table}[h]
+        \begin{center}
+            \begin{tabular}{ll}
+            Beginning of the turn(company list) & 0x000 \\
+            Request accepted & 0x001 \\
+            Game end & 0x002 \\
+            Request type: Buy & 0x100 \\
+            Request type: Sell & 0x101 \\
+            Error: Unkown CODE & 0x400 \\
+            Error: Invalid KEY & 0x401 \\
+            Error: Too many requests & 0x402 \\
+            Error: ID not exsists & 0x403 \\
+            Error: Too many BUY requests & 0x404 \\
+            Error: Too many SELL requests & 0x405
+            \end{tabular}
+            \caption{data format}
+            \label{tab:message_list}
+        \end{center}
+    \end{table}
+
+    \section{Usage} % (fold)
+    \label{sec:usage}
+
+        This client has several strategies and the examples of each strategies are compiled in default.
+        So you can use these strategies in easily.
+        In addition, you can simply adding a new strategy or put them together because this program is structured.
+        You can develop the strategy part without taking care of the low layers(especially network communication part or data handling part).
+
+        If you want to connect to the server by using the prepared binary,
+        You have to type the command in the terminal like
+
+        \begin{lstlisting}[caption=]
+./(binary name) (service) (port num)
+        \end{lstlisting}
+
+        \noindent or if you are alone and want to easily connect to the server by using all 4 clients in parallel,
+        put the command like
+
+        \begin{lstlisting}[caption=]
+python send.py (service) (port num) ./(binary name)
+        \end{lstlisting}
+
+        send.py is like the script which can run 4 binaris in parallel.
+        In addition, this script can log one of the binary's standard output.
+        I made 8 types of binaries, so you can select proper program in each game.
+        I will explain some binaries simply at the next section.
+
+    % section usage (end)
+
+    \section{Strategy Type} % (fold)
+    \label{sec:strategy_type}
+
+        \subsection{buysell} % (fold)
+        \label{sub:buysell}
+
+            This strategy is the most simplest and the most reliable.
+            This strategy will send 5 BUY requests in even turn,
+            and 5 SELL requests in odd turn.
+
+        % subsection buysell (end)
+
+        \subsection{do\_nothing} % (fold)
+        \label{sub:do_nothing}
+
+            This program will do nothing after connect to the server.
+            This program is exsits for the debugging.
+
+        % subsection do_nothing (end)
+
+        \subsection{test} % (fold)
+        \label{sub:test}
+
+            The difference between this program and others is the output.
+            This program will simply outputs the stock prices of every companies.
+            Any other comments are not throwed to standard output, so it makes easy to log the fluctuation of the company's stock price.
+            This program is exsits for the analyzing the system.
+
+        % subsection test (end)
+
+        \subsection{attack\_v1} % (fold)
+        \label{sub:attack_v1}
+
+            This strategy was effective before 2013/7/18.
+            This program will send a huge amount of requests to the server and lead the server to segmentation fault.
+            This program targeted at the bug in the server program,
+            but that bug is fixed now(2013/7/30).
+
+        % subsection attack_v1 (end)
+
+        \subsection{aimbug\_v1} % (fold)
+        \label{sub:aimbug_v1}
+
+            This strategy was also effective before 2013/7/18.
+            This program sends 5 BUY requests in every turn and will get a huge amount of money which exceeds UINT32\_MAX.
+            The bug in the server program which targeted by this strategy is fixed now(2013/7/30).
+
+        % subsection aimbug_v1 (end)
+
+    % section strategy_type (end)
+
+    \section{Proof that It Works} % (fold)
+    \label{sec:proof_that_it_works}
+
+        I put the log files that was saved by send.py.
+        These files is in the directory named 'logs'.
+        The name of the log file is the date when the program was executed.
+        So, please look at that log files(especially the latest one!!).
+
+    % section proof_that_it_works (end)
+
+\end{document}
